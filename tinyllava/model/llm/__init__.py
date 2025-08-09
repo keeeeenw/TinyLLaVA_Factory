@@ -26,3 +26,9 @@ def register_llm(name):
 # automatically import any Python files in the models/ directory
 models_dir = os.path.dirname(__file__)
 import_modules(models_dir, "tinyllava.model.llm")
+
+# Minimal alias so backend_key='llama' works even if a different alias was registered
+for k in list(LLM_FACTORY.keys()):
+    if "llama" in k and "llama" not in LLM_FACTORY:
+        LLM_FACTORY["llama"] = LLM_FACTORY[k]
+        break

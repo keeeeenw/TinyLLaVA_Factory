@@ -8,9 +8,11 @@ import torch.distributed as dist
 root_logger = None
 
 def print_rank0(*args):
-    local_rank = dist.get_rank()
-    if local_rank == 0:
-        print(*args)
+    print(*args)
+    # No deepspeed
+    # local_rank = dist.get_rank()
+    # if local_rank == 0:
+    #     print(*args)
 
 def logger_setting(save_dir=None):
     global root_logger
@@ -39,9 +41,11 @@ def logger_setting(save_dir=None):
         
 def log(*args):
     global root_logger
-    local_rank = dist.get_rank()
-    if local_rank == 0:
-        root_logger.info(*args)
+    root_logger.info(*args)
+    # No rank without deepspeed
+    # local_rank = dist.get_rank()
+    # if local_rank == 0:
+    #     root_logger.info(*args)
 
 
 

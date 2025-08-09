@@ -13,6 +13,48 @@ from tinyllava.data.dataset import make_supervised_data_module
 
 IS_TOKENIZER_GREATER_THAN_0_14 = version.parse(tokenizers.__version__) >= version.parse('0.14')
 
+import json
+import os
+from huggingface_hub import snapshot_download
+def patch_rope_scaling_if_needed(model_name_or_path: str) -> str:
+    """
+    Ensures `config.json` uses the new Transformers RoPE schema:
+    {"rope_scaling": {"type": "...", "factor": ...}}
+
+    If `model_name_or_path` is a repo id, we download the snapshot to the HF cache
+    and patch the cached config. If it's a local directory, we patch in place.
+
+    Returns the local directory that contains the patched config.json.
+    """
+    # Resolve to a local directory with a config.json
+    if os.path.isdir(model_name_or_path) and os.path.isfile(os.path.join(model_name_or_path, "config.json")):
+        local_dir = model_name_or_path
+    else:
+        # Download only the config; reuse cache on subsequent runs
+        # local_dir = snapshot_download(repo_id=model_name_or_path, allow_patterns=["config.json"])
+        local_dir = snapshot_download(repo_id=model_name_or_path)
+
+    config_path = os.path.join(local_dir, "config.json")
+    with open(config_path, "r") as f:
+        config_dict = json.load(f)
+
+    rope = config_dict.get("rope_scaling")
+    if isinstance(rope, dict) and "rope_type" in rope and "type" not in rope:
+        # Convert old keys to new schema
+        new_rope = {
+            "type": rope.get("rope_type", "dynamic"),
+            "factor": float(rope.get("factor", 1.0)),
+        }
+        config_dict["rope_scaling"] = new_rope
+        # Remove legacy field if present (not used by new schema)
+        rope.pop("original_max_position_embeddings", None)
+
+        with open(config_path, "w") as f:
+            json.dump(config_dict, f, indent=2)
+        print(f"[rope_patch] Patched rope_scaling in {config_path}: {new_rope}")
+
+    return local_dir
+
 
 def load_settings(model_arguments, data_arguments, training_arguments):
     model_arguments.tune_type_connector = training_arguments.tune_type_connector
@@ -59,6 +101,15 @@ def train():
     # model_args contain arguements for huggingface model .from_pretrained function
     model_args = load_settings(model_arguments, data_arguments, training_arguments)
     model_args = training_recipe.add_args(model_args)
+
+    # --- PATCH: normalize rope_scaling before TinyLlavaConfig loads the HF config ---
+    # Update the path in model_arguments (and in model_args['llm'] if you pass it later)
+    patched_llm_dir = patch_rope_scaling_if_needed(model_arguments.model_name_or_path)
+    model_arguments.model_name_or_path = patched_llm_dir
+    if "llm" in model_args:
+        model_args["llm"]["model_name_or_path"] = patched_llm_dir
+    # -------------------------------------------------------------------------------
+
     model_config = TinyLlavaConfig()
     model_config.load_from_config(model_arguments)
     model = TinyLlavaForConditionalGeneration(model_config)
