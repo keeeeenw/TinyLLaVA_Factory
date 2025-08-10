@@ -13,8 +13,10 @@ TRAIN_RECIPE=common #training recipes, other options are: lora, qlora
 MODEL_MAX_LENGTH=2048 #max model length for llm
 
 
-bash scripts/train/pretrain.sh "$DATA_PATH" "$IMAGE_PATH" "$LLM_VERSION" "$VT_VERSION" "$VT_VERSION2" "$CN_VERSION" "$VERSION" "$TRAIN_RECIPE" "$MODEL_MAX_LENGTH"
+# bash scripts/train/pretrain.sh "$DATA_PATH" "$IMAGE_PATH" "$LLM_VERSION" "$VT_VERSION" "$VT_VERSION2" "$CN_VERSION" "$VERSION" "$TRAIN_RECIPE" "$MODEL_MAX_LENGTH"
 
-# FINETUNE_DATA_PATH=$DATA_ROOT/llava/dataset/text_files/llava_v1_5_mix665k.json #finetune annotation file path
-# FINETUNE_IMAGE_PATH=$DATA_ROOT/llava/dataset #finetune image dir
-# bash scripts/train/finetune.sh "$FINETUNE_DATA_PATH" "$FINETUNE_IMAGE_PATH" "$LLM_VERSION" "$VT_VERSION" "$VT_VERSION2" "$CN_VERSION" "$CONV_VERSION" "$VERSION" "$TRAIN_RECIPE" "$MODEL_MAX_LENGTH"
+# FINETUNE_DATA_PATH=$DATA_ROOT/text_files/llava_v1_5_mix665k.json #finetune annotation file path
+FINETUNE_DATA_PATH=$DATA_ROOT/text_files/llava_v1_5_mix665k_cleaned_data.json #finetune annotation file path - no ocr_vqa
+# FINETUNE_DATA_PATH=$DATA_ROOT/text_files/llava_v1_5_mix665k_cleaned_data_w_ocr_vqa.json #finetune annotation file path - w ocr_vqa but 1 entry removed due to unable to download image
+FINETUNE_IMAGE_PATH=$DATA_ROOT/ #finetune image dir
+bash scripts/train/finetune.sh "$FINETUNE_DATA_PATH" "$FINETUNE_IMAGE_PATH" "$LLM_VERSION" "$VT_VERSION" "$VT_VERSION2" "$CN_VERSION" "$CONV_VERSION" "$VERSION" "$TRAIN_RECIPE" "$MODEL_MAX_LENGTH"
