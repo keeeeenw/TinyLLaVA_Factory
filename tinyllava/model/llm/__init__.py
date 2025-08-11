@@ -32,3 +32,5 @@ for k in list(LLM_FACTORY.keys()):
     if "llama" in k and "llama" not in LLM_FACTORY:
         LLM_FACTORY["llama"] = LLM_FACTORY[k]
         break
+
+print(LLM_FACTORY)
