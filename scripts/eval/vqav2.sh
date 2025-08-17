@@ -5,11 +5,20 @@ IFS=',' read -ra GPULIST <<< "$gpu_list"
 
 CHUNKS=${#GPULIST[@]}
 
-# SPLIT="llava_vqav2_mscoco_test-dev2015"
-SPLIT="llava_vqav2_mscoco_test2015"
+# This takes around 2 hours on a single 4090
+SPLIT="llava_vqav2_mscoco_test-dev2015"
+# This takes around 8 hours on a single 4090
+# SPLIT="llava_vqav2_mscoco_test2015"
 
-MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip-so400m-patch14-384-base-finetune"
-MODEL_NAME="MicroLlava-siglip-so400m-patch14-384-base-finetune"
+# siglip1
+# MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip-so400m-patch14-384-base-finetune"
+# MODEL_NAME="MicroLlava-siglip-so400m-patch14-384-base-finetune"
+# siglip2 v1 - this is the current release 08/17/2025
+MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip2-so400m-patch14-384-base-finetune"
+MODEL_NAME="MicroLlava-siglip2-so400m-patch14-384-base-finetune"
+# siglip2 v2 not as good as v1 so I uploaded v1
+# MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip2-so400m-patch14-384-base-finetune-v2"
+# MODEL_NAME="MicroLlava-siglip2-so400m-patch14-384-base-finetune-v2"
 EVAL_DIR="/home/ken/workspace/TinyLLaVA_Factory/data/eval"
 
 for IDX in $(seq 0 $((CHUNKS-1))); do

@@ -45,7 +45,7 @@
 from huggingface_hub import snapshot_download
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-hf_path = 'keeeeenw/MicroLlava-siglip-so400m-patch14-384-base-finetune'
+hf_path = 'keeeeenw/MicroLlava'
 
 # Sync local cache with remote, downloading only new/changed files
 # hf_path = snapshot_download(
@@ -57,7 +57,7 @@ hf_path = 'keeeeenw/MicroLlava-siglip-so400m-patch14-384-base-finetune'
 # )
 
 # Load model from the freshly synced local path
-# hf_path = "/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip-so400m-patch14-384-base-finetune-huggingface"
+# hf_path = "/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip2-so400m-patch14-384-base-finetune-huggingface"
 model = AutoModelForCausalLM.from_pretrained(hf_path, trust_remote_code=True)
 
 # model.cuda()

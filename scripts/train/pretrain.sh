@@ -34,7 +34,7 @@ python tinyllava/train/train.py \
     --mm_vision_select_layer -2 \
     --image_aspect_ratio square \
     --attn_implementation flash_attention_2 \
-    --fp16 True \ # TODO: change this to bf16
+    --bf16 True \
     --training_recipe $TRAIN_RECIPE \
     --tune_type_llm frozen \
     --tune_type_vision_tower frozen \
@@ -47,7 +47,7 @@ python tinyllava/train/train.py \
     --gradient_accumulation_steps 8 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 200 \
+    --save_steps 600 \
     --save_total_limit 20 \
     --learning_rate 2.5e-4 \
     --weight_decay 0. \
