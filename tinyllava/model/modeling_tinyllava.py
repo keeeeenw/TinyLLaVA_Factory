@@ -52,7 +52,9 @@ class TinyLlavaPreTrainedModel(PreTrainedModel):
 
     @property
     def _supports_sdpa(self):
-        return self.language_model._supports_sdpa
+        if hasattr(self, 'language_model') and hasattr(self.language_model, '_supports_sdpa'):
+            return self.language_model._supports_sdpa
+        return True  # Default to True for newer transformers versions
 
 
 class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):

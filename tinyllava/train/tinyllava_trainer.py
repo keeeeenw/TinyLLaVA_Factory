@@ -9,7 +9,6 @@ from transformers.trainer import (
     is_sagemaker_mp_enabled,
     get_parameter_names,
     has_length,
-    ALL_LAYERNORM_LAYERS,
     # ShardedDDPOption,
     logger,
 )
@@ -17,6 +16,8 @@ from typing import List, Optional
 
 from ..utils.train_utils import *
 
+# Define layernorm layers for parameter grouping (replaces deprecated ALL_LAYERNORM_LAYERS)
+ALL_LAYERNORM_LAYERS = [nn.LayerNorm]
 
 def split_to_even_chunks(indices, lengths, num_chunks):
     """
@@ -119,7 +120,7 @@ class LengthGroupedSampler(Sampler):
 
 class LLaVATrainer(Trainer):
 
-    def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
+    def _get_train_sampler(self, dataset=None) -> Optional[torch.utils.data.Sampler]:
         if self.train_dataset is None or not has_length(self.train_dataset):
             return None
 
