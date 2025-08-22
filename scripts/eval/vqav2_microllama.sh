@@ -17,10 +17,9 @@ SPLIT="llava_vqav2_mscoco_test-dev2015"
 # TODO: change conv-mode here for microllama models
 
 # siglip2 v1 - this is the current release 08/17/2025
-# MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip2-so400m-patch14-384-base-finetune"
-# MODEL_NAME="MicroLlava-siglip2-so400m-patch14-384-base-finetune"
-
-# TODO: change conv-mode here for microllama models
+MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip2-so400m-patch14-384-base-finetune"
+MODEL_NAME="MicroLlava-siglip2-so400m-patch14-384-base-finetune"
+CONV_MODE="llama"
 
 # siglip2 v2 not as good as v1 so I uploaded v1
 # MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip2-so400m-patch14-384-base-finetune-v2"
@@ -29,12 +28,11 @@ SPLIT="llava_vqav2_mscoco_test-dev2015"
 # TODO: change conv-mode here for microllama models
 
 # qwen3 0.6B
-MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-Qwen3-0.6B-siglip2-so400m-patch14-384-qwen3-0_5b_base-finetune"
-MODEL_NAME="MicroLlava-qwen3-0.6B-siglip2-so400m-patch14-384-base-finetune"
-CONV_MODE="qwen3_instruct"
+# MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-Qwen3-0.6B-siglip2-so400m-patch14-384-qwen3-0_5b_base-finetune"
+# MODEL_NAME="MicroLlava-qwen3-0.6B-siglip2-so400m-patch14-384-base-finetune"
+# CONV_MODE="qwen3_instruct"
+
 EVAL_DIR="/home/ken/workspace/TinyLLaVA_Factory/data/eval"
-# this does not work
-# --temperature 0 \
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
     CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m tinyllava.eval.model_vqa_loader \
@@ -44,6 +42,7 @@ for IDX in $(seq 0 $((CHUNKS-1))); do
         --answers-file $EVAL_DIR/vqav2/answers/$SPLIT/$MODEL_NAME/${CHUNKS}_${IDX}.jsonl \
         --num-chunks $CHUNKS \
         --chunk-idx $IDX \
+        --temperature 0 \
         --conv-mode $CONV_MODE &
 done
 
