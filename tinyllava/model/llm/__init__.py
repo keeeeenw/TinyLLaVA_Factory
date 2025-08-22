@@ -33,9 +33,14 @@ for k in list(LLM_FACTORY.keys()):
         LLM_FACTORY["llama"] = LLM_FACTORY[k]
         break
 
-# Minimal alias so backend_key='qwen' works even if a different alias was registered
+# Prefer qwen3 over qwen2 for qwen alias, and don't create alias if qwen3 exists
 for k in list(LLM_FACTORY.keys()):
-    if "qwen" in k and "qwen" not in LLM_FACTORY:
+    if "qwen3" in k and "qwen" not in LLM_FACTORY:
+        LLM_FACTORY["qwen"] = LLM_FACTORY[k]
+        break
+# Fallback to qwen2 if qwen3 not available
+for k in list(LLM_FACTORY.keys()):
+    if "qwen2" in k and "qwen" not in LLM_FACTORY:
         LLM_FACTORY["qwen"] = LLM_FACTORY[k]
         break
 
