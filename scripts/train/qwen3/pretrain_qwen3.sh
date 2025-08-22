@@ -20,7 +20,7 @@ VT_VARIANT="${VT_VERSION#*/}"
 LLM_VARIANT="${LLM_VERSION#*/}"
 
 python tinyllava/train/train.py \
-    --data_path  $DATA_PATH\
+    --data_path $DATA_PATH \
     --image_folder $IMAGE_PATH \
     --is_multimodal True \
     --conv_version pretrain \
@@ -41,14 +41,15 @@ python tinyllava/train/train.py \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 4 \
-    --gradient_accumulation_steps 16 \
+    --gradient_accumulation_steps 8 \
     --eval_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 500 \
+    --save_steps 2000 \
     --save_total_limit 5 \
-    --learning_rate 1e-3 \
+    --learning_rate 2.5e-4 \
     --weight_decay 0. \
-    --warmup_ratio 0.03 \
+    --warmup_ratio 0.06 \
+    --max_grad_norm 1.0 \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 False \
