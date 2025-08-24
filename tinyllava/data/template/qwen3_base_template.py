@@ -92,12 +92,12 @@ class Qwen3BaseTemplate(Template):
     system: "Formatter" = EmptyFormatter(slot=system+" ")
     separator: "Formatter" = EmptyFormatter(slot=[' ASSISTANT: ', '<|im_end|>'])
     
-    def __post_init__(self):
-        # Debug: print template registration
-        print(f"DEBUG: Qwen3BaseTemplate registered with name 'qwen3_base'")
-        print(f"DEBUG: format_user: {self.format_user.slot}")
-        print(f"DEBUG: format_assistant: {self.format_assistant.slot}")
-        print(f"DEBUG: separator: {self.separator.slot}")
+    # def __post_init__(self):
+    #     # Debug: print template registration
+    #     print(f"DEBUG: Qwen3BaseTemplate registered with name 'qwen3_base'")
+    #     print(f"DEBUG: format_user: {self.format_user.slot}")
+    #     print(f"DEBUG: format_assistant: {self.format_assistant.slot}")
+    #     print(f"DEBUG: separator: {self.separator.slot}")
     
     def make_labels(self, input_ids, prompt, tokenizer):
         """

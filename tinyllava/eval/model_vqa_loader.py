@@ -88,6 +88,15 @@ def eval_model(args):
     os.makedirs(os.path.dirname(answers_file), exist_ok=True)
     ans_file = open(answers_file, "w")
 
+    # Special handling for qwen3
+    do_sample = bool(args.temperature > 0)
+    temperature = args.temperature
+    if 'qwen3' in args.model_path:
+        keywords = [tokenizer.eos_token, "<|im_end|>"]
+        do_sample = False
+        temperature = None
+        print(f"Setting up special tokens for qwen3 to prevent it from printing multiple stopping tokens {keywords}")
+        print(f"Newer transformer models such as qwen does not support temperature, setting do_sample=False and temperature=None explicitly.")
 
     data_loader = create_data_loader(questions, args.image_folder, text_processor, image_processor)
     # print("Tokenizer's eos token: ", tokenizer.eos_token)
@@ -95,20 +104,20 @@ def eval_model(args):
     for (input_ids, image_tensor, image_sizes), line in tqdm(zip(data_loader, questions), total=len(questions)):
         idx = line["question_id"]
         cur_prompt = line["text"]
-        # keywords = [tokenizer.eos_token]
-        # stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
+        if keywords:
+            stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
         input_ids = input_ids.to(device='cuda', non_blocking=True)
         with torch.inference_mode():
             output_ids = model.generate(
                 input_ids,
                 images=image_tensor.to(dtype=torch.float16, device='cuda', non_blocking=True),
                 pad_token_id=tokenizer.pad_token_id,
-                do_sample=True if args.temperature > 0 else False,
-                temperature=args.temperature,
+                do_sample=do_sample,
+                temperature=temperature,
                 top_p=args.top_p,
                 num_beams=args.num_beams,
                 max_new_tokens=args.max_new_tokens,
-                # stopping_criteria=[stopping_criteria],
+                stopping_criteria=[stopping_criteria] if stopping_criteria else [],
                 image_sizes=image_sizes,
                 use_cache=True)
 
@@ -141,6 +150,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--max_new_tokens", type=int, default=128)
     parser.add_argument("--image_aspect_ratio", type=str, default="pad")
+    parser.add_argument("--stop-keywords", type=str, default=None, help="Comma-separated list of keywords to stop generation (e.g., '<|im_end|>')")
     args = parser.parse_args()
 
     eval_model(args)
