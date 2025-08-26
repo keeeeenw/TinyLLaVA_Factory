@@ -27,9 +27,9 @@ echo "GPU list: ${GPULIST}"
 echo "CHUNKS: ${CHUNKS}"
 
 # This takes around 2 hours on a single 4090 with 4 chunks for qwen3 0.6 and 1 chunk for microllama 300m
-# SPLIT="llava_vqav2_mscoco_test-dev2015"
+SPLIT="llava_vqav2_mscoco_test-dev2015"
 # This takes around 8 hours on a single 4090 with 4 chunks for qwen3 0.6 and 1 chunk for microllama 300m
-SPLIT="llava_vqav2_mscoco_test2015"
+# SPLIT="llava_vqav2_mscoco_test2015"
 
 # siglip1
 # MODEL_PATH="/home/ken/workspace/TinyLLaVA_Factory/checkpoints/llava_factory/tiny-llava-MicroLlama-siglip-so400m-patch14-384-base-finetune"
@@ -55,9 +55,12 @@ SPLIT="llava_vqav2_mscoco_test2015"
 # EVAL_DIR="/home/ken/workspace/TinyLLaVA_Factory/data/eval"
 # CONV_MODE="qwen3_instruct"
 
-# qwen3 0.6B
-MODEL_PATH="checkpoints/llava_factory/tiny-llava-Qwen3-0.6B-base-siglip2-so400m-patch14-384-qwen3-0_6b_base-finetune"
-MODEL_NAME="MicroLlava-qwen3-0.6B-base-siglip2-so400m-patch14-384-base-finetune-working"
+# qwen3 0.6B (accidentally deleted, hf files uploaded)
+# MODEL_PATH="checkpoints/llava_factory/tiny-llava-Qwen3-0.6B-base-siglip2-so400m-patch14-384-qwen3-0_6b_base-finetune"
+# MODEL_NAME="MicroLlava-qwen3-0.6B-base-siglip2-so400m-patch14-384-base-finetune-working"
+# qwen3 0.6B with ocr
+MODEL_PATH="checkpoints/llava_factory/tiny-llava-Qwen3-0.6B-base-siglip2-so400m-patch14-384-qwen3-0_6b_base-finetune-ocr"
+MODEL_NAME="MicroLlava-qwen3-0.6B-base-siglip2-so400m-patch14-384-base-finetune-ocr"
 CONV_MODE="qwen3_base"
 EVAL_DIR="/home/ken/workspace/TinyLLaVA_Factory/data/eval"
 # this does not work for qwen3

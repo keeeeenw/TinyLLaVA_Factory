@@ -29,7 +29,10 @@ import json
 import os
 
 # File path to the JSON data
+# base finetune
 json_path = 'data/text_files/llava_v1_5_mix665k_cleaned_data_w_ocr_vqa.json'
+# base sharegpt4v
+# json_path = 'data/text_files/cleaned_sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k_ocr_reduced.json'
 base_image_dir = '/home/ken/workspace/TinyLLaVA_Factory/data/'
 
 # Load the JSON data

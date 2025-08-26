@@ -39,7 +39,7 @@ python tinyllava/train/train.py \
     --tune_type_connector full \
     --group_by_modality_length True \
     --pretrained_model_path checkpoints/llava_factory/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain \
-    --output_dir checkpoints/llava_factory/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune \
+    --output_dir checkpoints/llava_factory/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-share-finetune \
     --num_train_epochs 1 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
@@ -48,7 +48,7 @@ python tinyllava/train/train.py \
     --save_strategy "steps" \
     --save_steps 10000 \
     --save_total_limit 5 \
-    --learning_rate 1e-4 \
+    --learning_rate 2e-5 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \
     --max_grad_norm 1.0 \
@@ -61,4 +61,4 @@ python tinyllava/train/train.py \
     --lazy_preprocess True \
     --report_to wandb \
     --tokenizer_use_fast False \
-    --run_name tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune
+    --run_name tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-share-finetune
