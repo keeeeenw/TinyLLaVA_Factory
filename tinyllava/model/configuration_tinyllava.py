@@ -101,6 +101,16 @@ class TinyLlavaConfig(PretrainedConfig):
             self.text_config = AutoConfig.from_pretrained(self.llm_model_name_or_path, trust_remote_code=True)
             if text_config is not None:
                 self.text_config = self.text_config.from_dict(text_config)
+            
+            # Fix for models missing hidden_act attribute
+            if not hasattr(self.text_config, 'hidden_act'):
+                if getattr(self.text_config, 'model_type', '') == 'qwen3':
+                    self.text_config.hidden_act = 'silu'
+                elif 'gemma' in self.llm_model_name_or_path.lower():
+                    self.text_config.hidden_act = 'gelu_pytorch_tanh'
+                else:
+                    # Default fallback
+                    self.text_config.hidden_act = 'silu'
                 
         self.hidden_size = getattr(self.text_config, 'hidden_size',  getattr(self.text_config, 'model_dim', None))
         self.vocab_size = getattr(self.text_config, 'vocab_size',  None)

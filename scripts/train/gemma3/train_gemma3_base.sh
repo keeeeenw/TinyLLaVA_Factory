@@ -1,0 +1,19 @@
+DATA_ROOT=/home/ken/workspace/TinyLLaVA_Factory/data
+# FINETUNE_DATA_PATH=$DATA_ROOT/text_files/llava_v1_5_mix665k_cleaned_data.json #finetune annotation file path - no ocr_vqa - run remove_dataset.py on llava_v1_5_mix665k.json
+FINETUNE_DATA_PATH=$DATA_ROOT/text_files/llava_v1_5_mix665k_cleaned_data_w_ocr_vqa.json #finetune annotation file path - w ocr_vqa but entries removed due to unable to download image ~ 356 images missing
+IMAGE_PATH=$DATA_ROOT/llava/llava_pretrain/images #pretrain image dir
+DATA_PATH=$DATA_ROOT/text_files/blip_laion_cc_sbu_558k.json #pretrain annotation file path
+FINETUNE_IMAGE_PATH=$DATA_ROOT/ #finetune image dir
+
+LLM_VERSION=google/gemma-3-270m # llm path in huggingface
+VT_VERSION=google/siglip2-so400m-patch14-384 #vision tower path in huggingface
+VT_VERSION2="" #if you are not using mof vision tower, keep it empty
+CN_VERSION=mlp2x_gelu #connector type, other options are: qformer, resampler, etc
+CONV_VERSION=gemma #chat template, other options are: phi, llama, gemmma, etc
+VERSION=gemma3-270m_base #experiment name for recording different runnings
+TRAIN_RECIPE=common #training recipes, other options are: lora, qlora
+MODEL_MAX_LENGTH=2048 #max model length for llm
+
+# Note: --attn_implementation eager is recommended. Otherwise, there will be a warning message.
+bash scripts/train/gemma3/pretrain_gemma3.sh "$DATA_PATH" "$IMAGE_PATH" "$LLM_VERSION" "$VT_VERSION" "$VT_VERSION2" "$CN_VERSION" "$VERSION" "$TRAIN_RECIPE" "$MODEL_MAX_LENGTH"
+# bash scripts/train/gemma3/finetune_gemma3.sh "$FINETUNE_DATA_PATH" "$FINETUNE_IMAGE_PATH" "$LLM_VERSION" "$VT_VERSION" "$VT_VERSION2" "$CN_VERSION" "$CONV_VERSION" "$VERSION" "$TRAIN_RECIPE" "$MODEL_MAX_LENGTH"
