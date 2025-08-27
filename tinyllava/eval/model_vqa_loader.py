@@ -91,6 +91,8 @@ def eval_model(args):
     # Special handling for qwen3
     do_sample = bool(args.temperature > 0)
     temperature = args.temperature
+    keywords = []
+    stopping_criteria = None
     if 'qwen3' in args.model_path:
         keywords = [tokenizer.eos_token, "<|im_end|>"]
         do_sample = False
